@@ -15,7 +15,7 @@ async function update() {
   const otherTabs = tabs.filter((t) => t.audible && !isMusic(t));
   const duck = otherTabs.length > 0 || otherApps.length > 0;
   if (duck !== ducked) {
-    console.log('[music-duck]', duck ? 'duck' : 'restore', { tabs: otherTabs.map((t) => t.title), apps: otherApps });
+    console.log('[music-duck]', duck ? 'duck' : 'restore', JSON.stringify({ tabs: otherTabs.map((t) => t.url), apps: otherApps }));
   }
   ducked = duck;
   for (const t of tabs.filter(isMusic)) chrome.tabs.sendMessage(t.id, { duck }).catch(() => {});
@@ -36,6 +36,13 @@ chrome.tabs.onUpdated.addListener((_id, change) => { if ('audible' in change || 
 chrome.tabs.onRemoved.addListener(update);
 // Content script asks for current state when it (re)loads.
 chrome.runtime.onMessage.addListener((msg) => { if (msg === 'hello') update(); });
+
+// Already-open YT Music tabs don't get the content script until reload; inject now.
+chrome.runtime.onInstalled.addListener(async () => {
+  for (const t of await chrome.tabs.query({ url: 'https://music.youtube.com/*' })) {
+    chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['content.js'] }).catch(() => {});
+  }
+});
 
 connectHost();
 update();

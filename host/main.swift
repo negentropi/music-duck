@@ -5,7 +5,7 @@ import Darwin
 import Foundation
 
 // Chrome's own audio is handled per-tab in the extension.
-let ignoredPrefixes = ["com.google.Chrome", "com.apple.audio", "com.apple.CoreSpeech"]
+let ignoredPrefixes = ["com.google.chrome", "com.apple.audio", "com.apple.corespeech"] // lowercase
 
 func prop<T>(_ id: AudioObjectID, _ sel: AudioObjectPropertySelector, _ initial: T) -> T? {
   var addr = AudioObjectPropertyAddress(mSelector: sel, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
@@ -33,7 +33,7 @@ func audibleApps() -> [String] {
       var buf = [CChar](repeating: 0, count: 1024)
       if proc_name(pid, &buf, 1024) > 0 { name = String(cString: buf) }
     }
-    if name.isEmpty || ignoredPrefixes.contains(where: name.hasPrefix) { continue }
+    if name.isEmpty || ignoredPrefixes.contains(where: name.lowercased().hasPrefix) { continue }
     apps.insert(name)
   }
   return apps.sorted()
@@ -55,9 +55,11 @@ Thread.detachNewThread {
   exit(0)
 }
 
+// Poll on the main run loop: Core Audio delivers property updates through it,
+// so a bare sleep loop reads stale IsRunningOutput values.
 var last: [String]? = nil
-while true {
+Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { _ in
   let apps = audibleApps()
   if apps != last { send(["apps": apps]); last = apps }
-  Thread.sleep(forTimeInterval: 0.25)
-}
+}.fire()
+RunLoop.main.run()
