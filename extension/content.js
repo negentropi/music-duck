@@ -3,9 +3,10 @@
 if (!window.__musicDuck) {
   window.__musicDuck = true;
   const DUCK_GAIN = 0.33; // lower by 67%
-  const RELEASE_MS = 1200; // hold duck briefly so short blips don't make music pump
+  const DUCK_FADE_S = 0.4;
+  const RESTORE_FADE_S = 0.75;
 
-  let ctx, gain, releaseTimer, current = 1;
+  let ctx, gain, current = 1;
   const routed = new WeakSet();
 
   // Only reroute once the AudioContext is actually running; a suspended context
@@ -23,18 +24,21 @@ if (!window.__musicDuck) {
     return true;
   }
 
-  const setGain = (v) => {
+  // Linear ramp from wherever the gain is now, so a fade interrupted midway doesn't jump.
+  const setGain = (v, seconds) => {
     if (!gain || v === current) return;
     current = v;
     console.log('[music-duck] gain', v);
     chrome.runtime.sendMessage({ gain: v }).catch(() => {});
-    gain.gain.setTargetAtTime(v, ctx.currentTime, 0.15);
+    const p = gain.gain, now = ctx.currentTime;
+    p.cancelScheduledValues(now);
+    p.setValueAtTime(p.value, now);
+    p.linearRampToValueAtTime(v, now + seconds);
   };
 
   chrome.runtime.onMessage.addListener(async ({ duck }) => {
-    clearTimeout(releaseTimer);
-    if (duck) { if (await route()) setGain(DUCK_GAIN); }
-    else releaseTimer = setTimeout(() => setGain(1), RELEASE_MS);
+    if (duck) { if (await route()) setGain(DUCK_GAIN, DUCK_FADE_S); }
+    else setGain(1, RESTORE_FADE_S);
   });
 
   chrome.runtime.sendMessage('hello').catch(() => {});
