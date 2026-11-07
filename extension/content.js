@@ -2,7 +2,7 @@
 // YT's own volume slider. Routing happens lazily on first duck.
 if (!window.__musicDuck) {
   window.__musicDuck = true;
-  const DUCK_GAIN = 0.67;
+  const DUCK_GAIN = 0.33; // lower by 67%
   const RELEASE_MS = 1200; // hold duck briefly so short blips don't make music pump
 
   let ctx, gain, releaseTimer;
