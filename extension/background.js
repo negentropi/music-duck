@@ -44,12 +44,5 @@ chrome.runtime.onMessage.addListener((msg) => {
   else if (msg?.gain !== undefined) hostLog({ event: 'gain', gain: msg.gain });
 });
 
-// Already-open YT Music tabs don't get the content script until reload; inject now.
-chrome.runtime.onInstalled.addListener(async () => {
-  for (const t of await chrome.tabs.query({ url: 'https://music.youtube.com/*' })) {
-    chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['content.js'] }).catch(() => {});
-  }
-});
-
 connectHost();
 update();
