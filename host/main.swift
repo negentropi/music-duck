@@ -49,17 +49,36 @@ if CommandLine.arguments.contains("--print") {
   print(audibleApps()); exit(0)
 }
 
-// Chrome closes stdin when the extension disconnects; exit then.
-Thread.detachNewThread {
-  while FileHandle.standardInput.availableData.count > 0 {}
-  exit(0)
+// Timestamped trail of detections + extension events, for latency debugging.
+let logURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/music-duck.log")
+let logFormat = ISO8601DateFormatter()
+logFormat.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+func log(_ line: String) {
+  let entry = Data("\(logFormat.string(from: Date())) \(line)\n".utf8)
+  if let h = try? FileHandle(forWritingTo: logURL) { h.seekToEndOfFile(); h.write(entry); try? h.close() }
+  else { try? entry.write(to: logURL) }
 }
+
+// Read framed messages from the extension (log lines). Chrome closes stdin on disconnect; exit then.
+Thread.detachNewThread {
+  let stdin = FileHandle.standardInput
+  while true {
+    let header = stdin.readData(ofLength: 4)
+    guard header.count == 4 else { exit(0) }
+    let len = header.withUnsafeBytes { Int(UInt32(littleEndian: $0.loadUnaligned(as: UInt32.self))) }
+    let body = stdin.readData(ofLength: len)
+    guard body.count == len else { exit(0) }
+    let text = String(decoding: body, as: UTF8.self)
+    DispatchQueue.main.async { log("ext  \(text)") }
+  }
+}
+log("host start")
 
 // Poll on the main run loop: Core Audio delivers property updates through it,
 // so a bare sleep loop reads stale IsRunningOutput values.
 var last: [String]? = nil
 Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { _ in
   let apps = audibleApps()
-  if apps != last { send(["apps": apps]); last = apps }
+  if apps != last { log("host apps=\(apps)"); send(["apps": apps]); last = apps }
 }.fire()
 RunLoop.main.run()

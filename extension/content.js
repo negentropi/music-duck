@@ -5,7 +5,7 @@ if (!window.__musicDuck) {
   const DUCK_GAIN = 0.33; // lower by 67%
   const RELEASE_MS = 1200; // hold duck briefly so short blips don't make music pump
 
-  let ctx, gain, releaseTimer;
+  let ctx, gain, releaseTimer, current = 1;
   const routed = new WeakSet();
 
   // Only reroute once the AudioContext is actually running; a suspended context
@@ -24,8 +24,10 @@ if (!window.__musicDuck) {
   }
 
   const setGain = (v) => {
-    if (!gain) return;
+    if (!gain || v === current) return;
+    current = v;
     console.log('[music-duck] gain', v);
+    chrome.runtime.sendMessage({ gain: v }).catch(() => {});
     gain.gain.setTargetAtTime(v, ctx.currentTime, 0.15);
   };
 
