@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Music Duck",
   "version": "0.1.0",
-  "description": "Lowers YouTube Music to 50% while any other audio plays.",
+  "description": "Lowers YouTube Music to 67% while any other audio plays.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5hkX4e+9xvuraDnxcR1K9+8MKmI2EI5apvVkEvOwgN6niS8J1JUomcsZhQWUXwDFKqLuRSCKnq97u8k58hqXDNcbIFEo60F5O3A1NNX5rgR2YJiyhZxS5vlVAC/6WoEwJJ6Y68nlTiAw/zoHY2vBOuE60UuqQ4crwyEEZwBOxZoR4B37x/YhHYTzxTET6tNUyYUAY2dQBd10Naubfn2I9go8DIbV2nBnhnpVp30qln2CYJ3Qi8nu0ey88IweSoiHcBK4WmqjZRc2isyh6fYKh5EWxzqnlSxzOKwp1tAwhLBT4W45fKsxA2ca2Bh+tuNamMxuecC4gK2hIKKsW6uWjQIDAQAB",
   "permissions": [
     "tabs",
