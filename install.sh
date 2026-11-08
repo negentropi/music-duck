@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p build
-swiftc -O host/main.swift -o build/musicduck-host
+swiftc -O host/*.swift -o build/musicduck-host
 EXT_ID=aedaaoejknlhpfaokkgbdflpeelkhnfc # fixed by "key" in extension/manifest.json
 DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
 mkdir -p "$DIR"

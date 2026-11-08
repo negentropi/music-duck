@@ -4,6 +4,7 @@ const MUSIC = 'music.youtube.com';
 const HOST = 'com.felix.musicduck';
 
 let otherApps = [];
+let quietestLufs = null; // loudness of the quietest other app (host-measured)
 let ducked = null;
 let port;
 const hostLog = (msg) => { try { port?.postMessage(msg); } catch {} };
@@ -22,15 +23,19 @@ async function update() {
     hostLog({ event: duck ? 'duck' : 'restore', ...why });
   }
   ducked = duck;
-  for (const t of tabs.filter(isMusic)) chrome.tabs.sendMessage(t.id, { duck }).catch(() => {});
+  // Other Chrome tabs share Chrome's audio process with the music, so their loudness
+  // can't be measured apart from it; then the content script uses a fixed duck.
+  const otherLufs = duck && otherTabs.length === 0 ? quietestLufs : null;
+  for (const t of tabs.filter(isMusic)) chrome.tabs.sendMessage(t.id, { duck, otherLufs }).catch(() => {});
 }
 
 function connectHost() {
   port = chrome.runtime.connectNative(HOST);
-  port.onMessage.addListener((msg) => { otherApps = msg.apps || []; update(); });
+  port.onMessage.addListener((msg) => { otherApps = msg.apps || []; quietestLufs = msg.quietestLufs ?? null; update(); });
   port.onDisconnect.addListener(() => {
     console.warn('[music-duck] host disconnected', chrome.runtime.lastError?.message);
     otherApps = [];
+    quietestLufs = null;
     update();
     setTimeout(connectHost, 5000);
   });
@@ -41,7 +46,7 @@ chrome.tabs.onRemoved.addListener(update);
 // Content script asks for current state when it (re)loads.
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg === 'hello') update();
-  else if (msg?.gain !== undefined) hostLog({ event: 'gain', gain: msg.gain });
+  else if (msg?.gain !== undefined) hostLog({ event: 'gain', ...msg });
 });
 
 connectHost();
