@@ -4,8 +4,10 @@ import CoreAudio
 import Darwin
 import Foundation
 
-// Chrome's own audio is handled per-tab in the extension.
-let ignoredPrefixes = ["com.google.chrome", "com.apple.audio", "com.apple.corespeech"] // lowercase
+// Chrome is handled per-tab in the extension; system UI blips (volume-key pop,
+// alerts, charger chime) are too short to duck for and made volume keys feel laggy.
+let ignoredPrefixes = ["com.google.chrome", "com.apple.audio", "com.apple.corespeech",
+                       "systemsoundserverd", "com.apple.powerchime"] // lowercase
 
 func prop<T>(_ id: AudioObjectID, _ sel: AudioObjectPropertySelector, _ initial: T) -> T? {
   var addr = AudioObjectPropertyAddress(mSelector: sel, mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
