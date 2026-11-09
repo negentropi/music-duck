@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Music Duck",
-  "version": "0.1.0",
-  "description": "Lowers YouTube Music by 67% while any other audio plays.",
+  "version": "1.0.0",
+  "description": "Automatically lowers YouTube Music while other audio plays (videos, calls, other apps), then brings it back when they stop.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5hkX4e+9xvuraDnxcR1K9+8MKmI2EI5apvVkEvOwgN6niS8J1JUomcsZhQWUXwDFKqLuRSCKnq97u8k58hqXDNcbIFEo60F5O3A1NNX5rgR2YJiyhZxS5vlVAC/6WoEwJJ6Y68nlTiAw/zoHY2vBOuE60UuqQ4crwyEEZwBOxZoR4B37x/YhHYTzxTET6tNUyYUAY2dQBd10Naubfn2I9go8DIbV2nBnhnpVp30qln2CYJ3Qi8nu0ey88IweSoiHcBK4WmqjZRc2isyh6fYKh5EWxzqnlSxzOKwp1tAwhLBT4W45fKsxA2ca2Bh+tuNamMxuecC4gK2hIKKsW6uWjQIDAQAB",
   "permissions": [
     "nativeMessaging"
@@ -23,5 +23,12 @@
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "homepage_url": "https://github.com/negentropi/music-duck",
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
 }
