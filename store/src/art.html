@@ -1,0 +1,110 @@
+<!doctype html><meta charset="utf-8">
+<style>
+  :root { --navy:#1C2340; --sun:#FFD84D; --orange:#FFA41B; --cream:#FFF7E2; --muted:#5B6280; }
+  * { box-sizing:border-box; margin:0 }
+  body { font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif; color:var(--navy); background:#ddd }
+  .frame { position:relative; overflow:hidden; background:var(--cream); margin:20px }
+  .shot { width:1280px; height:800px; display:grid; grid-template-columns: 500px minmax(0,1fr); align-items:center; padding:0 80px; gap:40px }
+  h1 { font-size:62px; line-height:1.02; letter-spacing:-0.03em; font-weight:800 }
+  h1 em { font-style:normal; background:linear-gradient(transparent 62%, var(--sun) 62%) }
+  p.lede { margin-top:24px; font-size:24px; line-height:1.4; color:var(--muted) }
+  .brand { position:absolute; left:80px; top:56px; display:flex; align-items:center; gap:14px; font-weight:700; font-size:22px }
+  .brand img { width:44px; height:44px }
+  .card { background:#fff; border-radius:28px; box-shadow:0 30px 60px -20px rgba(28,35,64,.25), 0 0 0 1px rgba(28,35,64,.06); padding:36px }
+  .lane-label { font-size:15px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:flex; justify-content:space-between }
+  svg text { font-family:inherit }
+  .apps { display:flex; flex-direction:column; gap:16px }
+  .app { display:grid; grid-template-columns: minmax(0,1fr) 100px 118px; white-space:nowrap; align-items:center; gap:20px; padding:20px 24px; border-radius:18px; background:#F6F7FB; font-size:22px; font-weight:600 }
+  .app .bar { height:12px; border-radius:6px; background:#E3E6F0; position:relative }
+  .app .bar i { position:absolute; left:0; top:0; bottom:0; border-radius:6px; background:var(--navy) }
+  .app .db { text-align:right; font-variant-numeric:tabular-nums; color:var(--muted) }
+  .app.quiet { background:#FFF3C4; box-shadow:inset 0 0 0 2px var(--orange) }
+  .app.music { background:var(--navy); color:#fff }
+  .app.music .bar { background:rgba(255,255,255,.18) } .app.music .bar i { background:var(--sun) } .app.music .db { color:var(--sun) }
+  .tag { font-size:14px; font-weight:700; color:#B36A00; margin-left:10px; text-transform:uppercase; letter-spacing:.05em }
+  .points { display:flex; flex-direction:column; gap:22px }
+  .pt { display:grid; grid-template-columns:64px 1fr; gap:22px; align-items:start }
+  .pt .ic { width:64px; height:64px; border-radius:18px; background:var(--sun); display:grid; place-items:center }
+  .pt b { font-size:25px; display:block; margin-bottom:6px } .pt span { font-size:19px; color:var(--muted); line-height:1.4 }
+</style>
+
+<!-- 1: what it does -->
+<div class="frame shot" id="s1">
+  <div class="brand"><img src="../../extension/icons/128.png">Music Duck</div>
+  <div>
+    <h1>Your music steps aside <em>by itself.</em></h1>
+    <p class="lede">When anything else plays, YouTube Music drops by 67%. When it stops, the music fades right back in.</p>
+  </div>
+  <div class="card"><svg id="timeline" viewBox="0 0 560 430" width="100%"></svg></div>
+</div>
+
+<!-- 2: relative to the quietest app -->
+<div class="frame shot" id="s2">
+  <div class="brand"><img src="../../extension/icons/128.png">Music Duck</div>
+  <div>
+    <h1>Ducks for <em>every app</em> on your Mac.</h1>
+    <p class="lede">With the free Mac helper, Music Duck measures how loud each app is and keeps your music 67% below the quietest one, so even a soft voice gets through.</p>
+  </div>
+  <div class="card apps">
+    <div class="lane-label"><span>Playing now</span><span>Loudness</span></div>
+    <div class="app"><span>Video call</span><div class="bar"><i style="width:78%"></i></div><span class="db">−16 LUFS</span></div>
+    <div class="app quiet"><span>Podcast<span class="tag">quietest</span></span><div class="bar"><i style="width:56%"></i></div><span class="db">−24 LUFS</span></div>
+    <div class="app"><span>Game</span><div class="bar"><i style="width:70%"></i></div><span class="db">−19 LUFS</span></div>
+    <svg viewBox="0 0 480 40" height="40"><path d="M240 4 v26 m-10 -10 l10 12 l10 -12" stroke="#1C2340" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="app music"><span>YouTube Music</span><div class="bar"><i style="width:32%"></i></div><span class="db">−33.6 LUFS</span></div>
+  </div>
+</div>
+
+<!-- 3: private -->
+<div class="frame shot" id="s3">
+  <div class="brand"><img src="../../extension/icons/128.png">Music Duck</div>
+  <div>
+    <h1>Private by <em>design.</em></h1>
+    <p class="lede">Music Duck does one thing, and does it entirely on your computer. Free and open source.</p>
+  </div>
+  <div class="card points">
+    <div class="pt"><div class="ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1C2340" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></div><div><b>No data collected</b><span>No accounts, no analytics, no network requests.</span></div></div>
+    <div class="pt"><div class="ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1C2340" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><path d="M4 20L20 4"/></svg></div><div><b>Can't see your tabs</b><span>No “read your browsing history” permission. Chrome only tells it whether a tab is playing sound.</span></div></div>
+    <div class="pt"><div class="ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1C2340" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div><div><b>Open source</b><span>Read every line at <span style="white-space:nowrap">github.com/negentropi/music-duck</span></span></div></div>
+    <div class="pt"><div class="ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1C2340" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-4M8 17V7M12 20V4M16 16V8M20 13v-2"/></svg></div><div><b>Your slider stays put</b><span>YouTube Music's own volume setting is never touched.</span></div></div>
+  </div>
+</div>
+
+<!-- promo tiles -->
+<div class="frame" id="small" style="width:440px;height:280px;background:linear-gradient(160deg,#FFD84D,#FFA41B);display:flex;flex-direction:column;justify-content:center;padding:0 36px;gap:14px">
+  <div style="display:flex;align-items:center;gap:16px"><img src="../../extension/icons/128.png" style="width:76px;height:76px;margin:-8px"><span style="font-size:38px;font-weight:800;letter-spacing:-0.02em">Music Duck</span></div>
+  <div style="font-size:23px;font-weight:600;line-height:1.3">Lowers YouTube Music while anything else plays.</div>
+</div>
+<div class="frame" id="marquee" style="width:1400px;height:560px;background:linear-gradient(160deg,#FFD84D,#FFA41B);display:grid;grid-template-columns:1fr 560px;align-items:center;padding:0 90px;gap:60px">
+  <div><div style="display:flex;align-items:center;gap:22px;margin-bottom:26px"><img src="../../extension/icons/128.png" style="width:110px;height:110px;margin:-10px"><span style="font-size:56px;font-weight:800;letter-spacing:-0.03em">Music Duck</span></div>
+  <div style="font-size:34px;font-weight:600;line-height:1.3">Your music steps aside by itself when anything else plays.</div></div>
+  <div class="card" style="padding:28px"><svg id="timeline2" viewBox="0 0 560 430" width="100%"></svg></div>
+</div>
+
+<script>
+// Timeline: music lane ducks while the other lane plays.
+function timeline(svg) {
+  const W = 560, N = 70, bw = W / N;
+  const rnd = (i) => { const s = Math.sin(i * 12.9898) * 43758.5453; return s - Math.floor(s); };
+  const on = 0.38, off = 0.7, duckF = 0.04, restF = 0.075;
+  const gain = (t) => t < on ? 1 : t < on + duckF ? 1 - 0.67 * (t - on) / duckF : t < off ? 0.33 : t < off + restF ? 0.33 + 0.67 * (t - off) / restF : 1;
+  const xa = on * W, xb = off * W;
+  let h = `<rect x="${xa}" y="44" width="${xb - xa}" height="360" rx="12" fill="#FFD84D" opacity=".22"/>`;
+  const lane = (y, label, color, amp, active) => {
+    h += `<rect x="0" y="${y - 102}" width="190" height="26" fill="#fff"/><text x="0" y="${y - 84}" font-size="15" font-weight="700" letter-spacing="1" fill="#5B6280">${label}</text>`;
+    for (let i = 0; i < N; i++) {
+      const t = (i + 0.5) / N, a = active(t);
+      if (!a) { h += `<rect x="${i * bw + 1.5}" y="${y - 1.5}" width="${bw - 3}" height="3" rx="1.5" fill="#E3E6F0"/>`; continue; }
+      const v = amp * a * (0.35 + 0.65 * rnd(i + y));
+      h += `<rect x="${i * bw + 1.5}" y="${y - v}" width="${bw - 3}" height="${2 * v}" rx="${(bw - 3) / 2}" fill="${color}"/>`;
+    }
+  };
+  lane(150, 'YOUTUBE MUSIC', '#1C2340', 58, gain);
+  lane(340, 'ANOTHER TAB OR APP', '#FFA41B', 50, (t) => (t > on && t < off ? 1 : 0));
+  h += `<g font-size="17" font-weight="800" fill="#1C2340" text-anchor="middle"><text x="${(xa + xb) / 2}" y="${236}">↓ 67%</text></g>`;
+  h += `<g font-size="14" fill="#5B6280" text-anchor="middle"><text x="${xa}" y="425">starts</text><text x="${xb}" y="425">stops → fades back</text></g>`;
+  svg.innerHTML = h;
+}
+timeline(document.getElementById('timeline'));
+timeline(document.getElementById('timeline2'));
+</script>
