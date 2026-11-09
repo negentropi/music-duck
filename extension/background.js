@@ -9,6 +9,7 @@ let ducked = null;
 let port;
 const hostLog = (msg) => { try { port?.postMessage(msg); } catch {} };
 
+// Host permission reveals URLs of music tabs only; other tabs have no url.
 const isMusic = (tab) => {
   try { return new URL(tab.url || tab.pendingUrl || '').host === MUSIC; } catch { return false; }
 };
@@ -18,7 +19,7 @@ async function update() {
   const otherTabs = tabs.filter((t) => t.audible && !isMusic(t));
   const duck = otherTabs.length > 0 || otherApps.length > 0;
   if (duck !== ducked) {
-    const why = { tabs: otherTabs.map((t) => t.url), apps: otherApps };
+    const why = { tabs: otherTabs.length, apps: otherApps }; // no "tabs" permission: other tabs' URLs are hidden
     console.log('[music-duck]', duck ? 'duck' : 'restore', JSON.stringify(why));
     hostLog({ event: duck ? 'duck' : 'restore', ...why });
   }
