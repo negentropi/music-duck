@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 mkdir -p build
 swiftc -O host/*.swift -o build/musicduck-host
 DEV_ID=aedaaoejknlhpfaokkgbdflpeelkhnfc   # unpacked build, fixed by "key" in extension/manifest.json
-STORE_ID=""                               # Chrome Web Store build; set once the store assigns it
+STORE_ID=klfcklmbgfkhjjjlmmmfgdegmaojoagh  # Chrome Web Store build
 ORIGINS="\"chrome-extension://$DEV_ID/\""
 [ -n "$STORE_ID" ] && ORIGINS="$ORIGINS, \"chrome-extension://$STORE_ID/\""
 DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"

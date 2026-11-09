@@ -62,6 +62,6 @@ Music Duck is an independent project, not affiliated with or endorsed by Google 
 
 Public · All regions · Free
 
-## After the first upload
+## Store item
 
-The store assigns the extension its own ID (shown in the dashboard URL). Put it in `STORE_ID=` in `install.sh` so the Mac helper accepts the store build, then update the store link in the README.
+ID `klfcklmbgfkhjjjlmmmfgdegmaojoagh` (already in `STORE_ID` in `install.sh`).

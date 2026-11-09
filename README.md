@@ -18,7 +18,7 @@ Loudness is measured in LUFS (ITU-R BS.1770), the same scale streaming services 
 
 ## Install
 
-1. **Extension:** install Music Duck from the Chrome Web Store (link coming soon), or load it unpacked:
+1. **Extension:** install [Music Duck from the Chrome Web Store](https://chromewebstore.google.com/detail/klfcklmbgfkhjjjlmmmfgdegmaojoagh) (in review), or load it unpacked:
    open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and pick the `extension` folder.
 2. **Optional Mac helper** (needed to duck for apps outside Chrome, e.g. Zoom, FaceTime, Spotify, games). macOS 14.2 or later, plus the Xcode command line tools (`xcode-select --install`):
 
