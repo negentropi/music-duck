@@ -42,6 +42,7 @@ final class Meter {
   private let acc = OSAllocatedUnfairLock(initialState: (sum: 0.0, frames: 0))
   private var smoothed: Double? // gated, smoothed power
   private var lastSound: Date?
+  private var soundTicks = 0
 
   /// Without "System Audio Recording" permission taps deliver pure digital silence, which
   /// looks the same as a quiet app. Any non-zero sample from any tap proves permission.
@@ -98,7 +99,7 @@ final class Meter {
     guard err == noErr, AudioDeviceStart(agg, ioProc) == noErr else { stop(); return nil }
   }
 
-  /// Call every tick. Smoothed loudness in LUFS (~1s window, gated), or nil if nothing audible yet.
+  /// Call every tick. Smoothed loudness in LUFS (~3s window, gated), or nil if nothing audible yet.
   func level() -> Double? {
     let (sum, frames) = acc.withLock { s in defer { s = (0, 0) }; return (s.sum, s.frames) }
     if frames > 0 {
@@ -106,7 +107,11 @@ final class Meter {
       if power > 0 { Meter.tapsDeliverAudio = true }
       if lufs(power) > Meter.gateLufs {
         lastSound = Date()
-        smoothed = smoothed.map { $0 + 0.25 * (power - $0) } ?? power // ~1s at 0.2s ticks
+        // ~3s window (BS.1770 short-term) so quieter moments in a video don't swing
+        // the duck. The first ticks are partly silence; converge fast over them.
+        soundTicks += 1
+        let a = soundTicks <= 5 ? 1 / Double(soundTicks) : 0.07
+        smoothed = smoothed.map { $0 + a * (power - $0) } ?? power
       }
     }
     return smoothed.map(lufs)

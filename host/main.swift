@@ -128,6 +128,7 @@ Thread.detachNewThread {
 }
 log("host start")
 
+let holdSeconds = 3.0
 var meters: [AudioObjectID: Meter] = [:]
 var meterClock: String?
 var lastApps: [String]? = nil
@@ -145,13 +146,14 @@ func syncMeters() {
 func report() {
   // Apps keep their output running ~2s after they stop (and some hold it open while
   // silent). Once taps are proven to deliver audio, a metered process only counts
-  // while it has made sound within the last 0.5s.
+  // while it has made sound within `holdSeconds`. The hold must outlast pauses in
+  // speech: at 0.5s every pause in a video restored the music, then ducked it again.
   var audible: [AudioObjectID: String] = [:]
   var appLevel: [String: Double] = [:]
   for (id, name) in watcher.playing {
     let meter = meters[id]
     let level = meter?.level()
-    guard meter == nil || !Meter.tapsDeliverAudio || meter!.soundWithin(0.5) else { continue }
+    guard meter == nil || !Meter.tapsDeliverAudio || meter!.soundWithin(holdSeconds) else { continue }
     audible[id] = name
     // An app is as loud as its loudest process; duck for the quietest app so it stays audible.
     if let level { appLevel[name] = max(appLevel[name] ?? -.infinity, level) }

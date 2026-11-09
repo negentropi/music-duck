@@ -11,6 +11,7 @@ const MIN_GAIN = 0.05;
 const GATE_LUFS = -55; // pauses quieter than this don't move the level
 const DUCK_FADE_S = 0.4;
 const RESTORE_FADE_S = 0.75;
+const FOLLOW_FADE_S = 1.5; // already ducked, other sound's level moved: drift, don't hop
 
 let ctx, pre, duckGain, analysers, musicPower = null;
 let current = 1;
@@ -99,7 +100,7 @@ function targetGain() {
 function apply() {
   const v = targetGain();
   if (!duckGain || Math.abs(20 * Math.log10(v / current)) < 0.5) return;
-  const seconds = v > current && !state.duck ? RESTORE_FADE_S : DUCK_FADE_S;
+  const seconds = !state.duck ? RESTORE_FADE_S : current < 1 ? FOLLOW_FADE_S : DUCK_FADE_S;
   current = v;
   chrome.runtime.sendMessage({ gain: Number(v.toFixed(3)), musicLufs: musicLufs()?.toFixed(1), otherLufs: state.otherLufs }).catch(() => {});
   const p = duckGain.gain, now = ctx.currentTime;
