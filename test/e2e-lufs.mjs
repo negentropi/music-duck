@@ -11,8 +11,9 @@ const b = await puppeteer.launch({
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const sw = await (await b.waitForTarget((t) => t.type() === 'service_worker')).worker();
-// No native host in this profile: stop the reconnect loop so it can't reset fake state.
-await sw.evaluate(() => { connectHost = () => {}; });
+// Cut off any real native host (it would report this Mac's real audio over the fake
+// state) and stop the reconnect loop.
+await sw.evaluate(() => { connectHost = () => {}; port?.disconnect(); });
 const p = await b.newPage();
 await p.setRequestInterception(true);
 const page = `<script>
@@ -38,10 +39,10 @@ const music = (await probe()).musicLufs;
 near('music loudness ≈ -17.8 LUFS', music, -17.8, 0.5);
 const expect = (o) => Math.min(1, Math.max(0.05, 10 ** ((o + 20 * Math.log10(0.33) - music) / 20)));
 for (const o of [-27.8, -17.8, -10]) {
-  await other(o); await sleep(1200);
+  await other(o); await sleep(2000);
   near(`other at ${o} LUFS -> music ${(o - 9.6).toFixed(1)} LUFS`, (await probe()).gain, expect(o), 0.01);
 }
-await other(null); await sleep(1200);
+await other(null); await sleep(2000);
 near('unmeasured other -> fixed 0.33', (await probe()).gain, 0.33, 0.01);
 await other(undefined); await sleep(1200);
 near('restore -> 1', (await probe()).gain, 1, 0.01);

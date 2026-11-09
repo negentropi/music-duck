@@ -12,7 +12,7 @@ const b = await puppeteer.launch({
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const sw = await (await b.waitForTarget((t) => t.type() === 'service_worker')).worker();
-await sw.evaluate(() => { connectHost = () => {}; }); // no native host here
+await sw.evaluate(() => { connectHost = () => {}; port?.disconnect(); }); // real Mac audio would skew the result
 const hum = `const c = new AudioContext(), o = c.createOscillator(), g = c.createGain();
   o.frequency.value = 25; g.gain.value = 0.0005; o.connect(g).connect(c.destination); o.start();`;
 

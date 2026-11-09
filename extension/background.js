@@ -38,7 +38,7 @@ function connectHost() {
     otherApps = [];
     quietestLufs = null;
     update();
-    setTimeout(connectHost, 5000);
+    setTimeout(() => connectHost(), 5000); // late-bound so tests can stub it
   });
 }
 
